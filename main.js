@@ -59,6 +59,17 @@ function createWindow() {
                 { type: 'separator' },
                 { role: 'togglefullscreen' }
             ]
+        },
+        {
+            label: 'Help',
+            submenu: [
+                {
+                    label: 'About Desktop Menu Editor',
+                    click: () => {
+                        showAboutDialog();
+                    }
+                }
+            ]
         }
     ];
 
@@ -105,6 +116,24 @@ function createWindow() {
     });
 
     console.log('Main window created successfully');
+}
+
+// Function to show the About dialog
+function showAboutDialog() {
+    dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        title: 'About Desktop Menu Editor',
+        message: 'Desktop Menu Editor',
+        detail: `Version: ${app.getVersion()}\n\n` +
+            'A desktop menu editor for Linux applications that allows you to easily edit .desktop files.\n\n' +
+            'Author: Christoph Mussenbrock\n' +
+            'Email: christoph@etherisc.com\n' +
+            'License: MIT\n\n' +
+            'GitHub: https://github.com/christoph2806/menu-editor\n\n' +
+            '© 2024 Christoph Mussenbrock. All rights reserved.',
+        buttons: ['OK'],
+        icon: path.join(__dirname, 'build/icons/icon.png')
+    });
 }
 
 // Create window when Electron has finished initialization

@@ -17,7 +17,7 @@
     "linux",
     "desktop"
   ],
-  "author": "",
+  "author": "Christoph Mussenbrock <christoph@etherisc.com>",
   "license": "MIT",
   "dependencies": {
     "electron-reload": "^2.0.0-alpha.1",

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Desktop Menu Editor</title>
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/scroll/simplescrollbars.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/dialog/dialog.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        #app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        #sidebar {
+            width: 300px;
+            min-width: 250px;
+            background-color: #f0f0f0;
+            padding: 10px;
+            overflow-y: auto;
+            border-right: 1px solid #ddd;
+            flex-shrink: 0;
+        }
+
+        #content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        #editor-area {
+            flex: 1;
+            width: 100%;
+            font-family: monospace;
+            padding: 10px;
+            border: 1px solid #ddd;
+            resize: none;
+            overflow: hidden;
+        }
+
+        .CodeMirror {
+            height: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            border: 1px solid #ddd;
+            max-width: 100%;
+        }
+
+        /* Remove explicit scrollbar styling as it's causing issues */
+        /* Let CodeMirror handle its own scrollbars natively */
+
+        /* Desktop file syntax highlighting */
+        .cm-section {
+            color: #d73a49;
+            font-weight: bold;
+        }
+
+        .cm-key {
+            color: #0366d6;
+            font-weight: bold;
+        }
+
+        .cm-localized-key {
+            color: #6f42c1;
+            font-weight: bold;
+        }
+
+        .cm-value {
+            color: #22863a;
+        }
+
+        .cm-value-item {
+            color: #e36209;
+            font-weight: 500;
+        }
+
+        .cm-separator {
+            color: #24292e;
+            font-weight: bold;
+        }
+
+        .cm-comment {
+            color: #6a737d;
+            font-style: italic;
+        }
+
+        #toolbar {
+            padding: 10px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        h2 {
+            margin-top: 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .section-header {
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+        }
+
+        /* New styles for the category structure */
+        .category-section {
+            margin-bottom: 5px;
+        }
+
+        .category-header {
+            padding: 8px;
+            background-color: #e8e8e8;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .category-header:hover {
+            background-color: #d8d8d8;
+        }
+
+        .triangle {
+            display: inline-block;
+            margin-right: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .category-name {
+            font-weight: bold;
+        }
+
+        .category-content {
+            margin-left: 15px;
+            padding-left: 10px;
+            border-left: 1px solid #ddd;
+        }
+
+        .app-item {
+            padding: 6px 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .app-item:hover {
+            background-color: #e0e0e0;
+        }
+
+        .app-item.selected {
+            background-color: #d0d0d0;
+            font-weight: bold;
+        }
+
+        .section-header.collapsible {
+            cursor: pointer;
+        }
+
+        .section-triangle {
+            margin-right: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .section-title {
+            font-weight: bold;
+        }
+
+        .section-content {
+            margin-left: 15px;
+            padding-left: 10px;
+            border-left: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-container">
+        <div id="sidebar">
+            <h2>Menu Editor</h2>
+            <div class="section-header collapsible">
+                <span class="section-triangle">▶</span>
+                <span class="section-title">System Applications</span>
+            </div>
+            <div id="system-apps-list" class="section-content"></div>
+
+            <div class="section-header collapsible">
+                <span class="section-triangle">▶</span>
+                <span class="section-title">User Applications</span>
+            </div>
+            <div id="user-apps-list" class="section-content"></div>
+        </div>
+
+        <div id="content">
+            <div id="file-path">Select a .desktop file to edit</div>
+            <div id="editor-container"></div>
+        </div>
+    </div>
+
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/scroll/simplescrollbars.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/scroll/scrollpastend.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/search.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/searchcursor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/dialog/dialog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/match-highlighter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/display/placeholder.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/jump-to-line.min.js"></script>
+    <script src="renderer.js"></script>
+</body>
+
+</html>

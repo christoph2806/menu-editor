@@ -1,0 +1,44 @@
+{
+  "name": "electron-menu-editor",
+  "version": "0.0.1",
+  "description": "A desktop menu editor for Linux applications",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --debug",
+    "package": "electron-packager . --out=dist --asar --overwrite --platform=linux --arch=x64",
+    "build": "electron-builder --linux AppImage",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "electron",
+    "menu",
+    "editor",
+    "linux",
+    "desktop"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "electron-reload": "^2.0.0-alpha.1",
+    "fs-extra": "^11.1.1",
+    "monaco-editor": "0.30.1",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^25.1.8",
+    "electron-packager": "^17.1.2"
+  },
+  "build": {
+    "appId": "com.electron.menu-editor",
+    "productName": "Electron Menu Editor",
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Utility",
+      "icon": "build/icons"
+    }
+  }
+}

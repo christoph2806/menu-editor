@@ -1,6 +1,6 @@
 {
   "name": "electron-menu-editor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A desktop menu editor for Linux applications",
   "main": "main.js",
   "scripts": {

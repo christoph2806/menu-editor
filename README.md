@@ -9,6 +9,7 @@ A desktop menu editor for Linux applications that allows you to easily edit .des
 - Support for localized entries
 - Configurable editor settings
 - Automatic saving of system files to user directory
+- About menu with application and author information
 
 ## Installation
 
@@ -17,8 +18,8 @@ A desktop menu editor for Linux applications that allows you to easily edit .des
 Download the latest AppImage from the [releases page](https://github.com/christoph2806/menu-editor/releases), make it executable and run it:
 
 ```bash
-chmod +x "Electron Menu Editor-0.0.1.AppImage"
-./Electron\ Menu\ Editor-0.0.1.AppImage
+chmod +x "Electron Menu Editor-0.0.2.AppImage"
+./Electron\ Menu\ Editor-0.0.2.AppImage
 ```
 
 ### From Source
@@ -45,6 +46,7 @@ npm run build
 3. Select a .desktop file to edit
 4. Make your changes
 5. Click Save to save the changes
+6. Access application information via Help > About Desktop Menu Editor
 
 ## Development
 
